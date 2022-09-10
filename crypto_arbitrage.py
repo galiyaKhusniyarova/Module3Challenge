@@ -1,7 +1,10 @@
 import pandas as pd
 from pathlib import Path
 
-# ***COLLECTING THE DATA***
+# ***********************************************************************
+#                          COLLECTING THE DATA
+#************************************************************************
+
 # Collect the data for the bitstamp.csv CSV file
 bitstamp = pd.read_csv(
     Path('./Resources/bitstamp.csv'),
@@ -55,7 +58,7 @@ print(coinbase.isnull().sum())
 
 #Due to equal quantity of missing data in each column, it can be just removed from the spreadsheet
 #Dropping missing data
-coinbase = bitstamp.dropna()
+coinbase = coinbase.dropna()
 print(coinbase.isnull().sum())
 
 
@@ -76,7 +79,56 @@ print(coinbase.duplicated().sum())           #no duplicated values found
 coinbase = coinbase.drop_duplicates()
 
 
+#************************************************************************
+#                          ANALYZING THE DATA
+#************************************************************************
 
 
 
+#1. Choosing columns of data to focus analysys on
+
+#Selecting `Timestamp (the index)` and `Close` from BITSTAMP DataFrame
+bitstamp_sliced = bitstamp.loc[:, "Close"]
+print(bitstamp_sliced.head())
+
+#Selecting `Timestamp (the index)` and `Close` from COINBASE DataFrame
+coinbase_sliced = coinbase.loc[:, "Close"]
+print(coinbase_sliced.head())
+
+
+#************************************************************************
+#2. Extracting summary statistics and plotting the data
+
+#The summary statistics for BITSTAMP DataFrame
+print(bitstamp_sliced.describe())
+
+#The summary statistics for COINBASE DataFrame
+print(coinbase_sliced.describe())
+
+#Creating a line plot for the BITSTAMP DataFrame
+bitstamp_sliced.plot(figsize=(10,5), title = "Bitstamp Prices", color = "blue")
+
+#Creating a line plot for the COINBASE DataFrame
+bitstamp_sliced.plot(figsize=(10,5), title = "Coinbase Prices", color = "blue")
+
+#Overlaying the visualizations for the bitstamp and coinbase DataFrames in one plot
+bitstamp_sliced.plot(legend=True, figsize=(15, 10), title="Bitstamp v. Coinbase", color="blue", label="Bitstamp")
+coinbase_sliced.plot(legend=True, figsize=(15, 10), color="orange", label="Coinbase")
+
+#Overlaying the visualizations for the bitstamp and coinbase DataFrames in one plot (earlier 1-month period)
+bitstamp_sliced.loc["2018-01-01":"2018-02-01"].plot(legend=True, figsize=(15, 10), title="Exchange Comparison (Earlier Time Period)", color="blue", label="Bitstamp")
+coinbase_sliced.loc["2018-01-01":"2018-02-01"].plot(legend=True, figsize=(15, 10), color="orange", label="Coinbase")
+
+#Overlaying the visualizations for the bitstamp and coinbase DataFrames in one plot (later 1-month period)
+bitstamp_sliced.tail()
+bitstamp_sliced.loc["2018-02-28":"2018-03-31"].plot(legend=True, figsize=(15, 10), title="Exchange Comparison (Later Time Period)", color="blue", label="Bitstamp")
+coinbase_sliced.loc["2018-02-28":"2018-03-31"].plot(legend=True, figsize=(15, 10), color="orange", label="Coinbase")
+
+
+#******************************************************************
+#3. Specific dates analysis
+
+#Overlaying the visualizations for the bitstamp and coinbase DataFrames in one plot (earlier 1-day period)
+bitstamp_sliced.loc["2018-01-16"].plot(legend=True, figsize=(15, 10), title="Jan 16, 2018", color="blue", label="Bitstamp")
+coinbase_sliced.loc["2018-01-16"].plot(legend=True, figsize=(15, 10), color="orange", label="Coinbase")
 
